@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AIRA | Quantum Llama Elite</title>
+    <title>AIRA | Quantum Llama 3.1</title>
     <style>
         :root {
             --accent: #4285f4;
@@ -22,16 +22,6 @@
 
         #canvas-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
 
-        /* --- SIDEBAR --- */
-        #sidebar {
-            position: fixed; left: -280px; top: 0; width: 280px; height: 100%;
-            background: rgba(0, 8, 20, 0.95); backdrop-filter: blur(25px);
-            z-index: 200; transition: 0.5s; border-right: 1px solid var(--border);
-            padding-top: 60px;
-        }
-        #sidebar.open { left: 0; }
-        .menu-item { padding: 18px 30px; cursor: pointer; border-bottom: 1px solid var(--glass); font-size: 15px; }
-
         header { 
             position: sticky; top: 0; z-index: 100; padding: 20px; 
             display: flex; justify-content: space-between; align-items: center;
@@ -41,7 +31,6 @@
         .logo { font-weight: 900; letter-spacing: 5px; color: #00d4ff; }
         .menu-btn { font-size: 24px; cursor: pointer; color: var(--accent); }
 
-        /* --- CHAT AREA --- */
         #chat-window { 
             position: relative; z-index: 10; height: calc(100vh - 160px);
             padding: 20px 10% 100px 10%; display: flex; flex-direction: column; gap: 20px;
@@ -52,13 +41,12 @@
         .user-msg {
             align-self: flex-end; background: rgba(0, 212, 255, 0.1);
             padding: 15px 22px; border-radius: 22px 22px 4px 22px;
-            border: 1px solid #00d4ff; max-width: 75%; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            border: 1px solid #00d4ff; max-width: 75%;
         }
 
         .aira-msg-group { align-self: flex-start; max-width: 90%; display: flex; flex-direction: column; gap: 10px; }
         .aira-msg { color: #eefbff; line-height: 1.6; font-size: 18px; }
 
-        /* --- GEMINI THINKING CIRCLE --- */
         .thinking-nexus { display: flex; align-items: center; gap: 12px; padding: 10px; }
         .gemini-circle {
             width: 24px; height: 24px;
@@ -69,66 +57,44 @@
         }
         @keyframes rotateGemini { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* --- INPUT AREA --- */
         .bottom-area { position: fixed; bottom: 0; width: 100%; padding: 30px 0; z-index: 150; display: flex; justify-content: center; }
         .input-pill {
             width: 92%; max-width: 800px; background: rgba(0,0,0,0.8);
             border: 1px solid var(--border); border-radius: 50px;
             padding: 10px 25px; display: flex; align-items: center; 
-            backdrop-filter: blur(25px); transition: 0.4s ease;
+            backdrop-filter: blur(25px); transition: 0.4s;
         }
-        .input-pill:focus-within { 
-            border-color: var(--accent);
-            box-shadow: 0 0 25px var(--glow-color);
-            transform: translateY(-2px);
-        }
-
+        .input-pill:focus-within { border-color: var(--accent); box-shadow: 0 0 25px var(--glow-color); }
         input { flex: 1; background: none; border: none; color: white; padding: 12px; outline: none; font-size: 16px; }
         
         .action-btns { display: flex; align-items: center; gap: 15px; }
-        .plus-icon { font-size: 28px; color: #00d4ff; cursor: pointer; transition: 0.3s; }
-        .plus-icon:hover { transform: rotate(90deg); }
-        
-        .waves { display: flex; gap: 4px; cursor: pointer; }
-        .bar { width: 3px; height: 14px; background: #00d4ff; border-radius: 10px; }
-        .active-mic .bar { animation: wave 1s infinite; }
-        @keyframes wave { 0%, 100% { height: 10px; } 50% { height: 22px; } }
-        
         .send-btn { font-size: 30px; color: #00d4ff; cursor: pointer; display: none; }
-        #fileInput { display: none; }
+        .waves { display: flex; gap: 4px; }
+        .bar { width: 3px; height: 14px; background: #00d4ff; border-radius: 10px; }
     </style>
 </head>
 <body>
 
 <div id="canvas-container"></div>
 
-<div id="sidebar">
-    <div class="menu-item" onclick="location.reload()">🔄 Reset Neural Link</div>
-    <div class="menu-item" onclick="alert('Admin Logs restricted.')">🔐 Admin Panel</div>
-    <div class="menu-item" style="color:red;" onclick="toggleSidebar()">✕ Close</div>
-</div>
-
 <header>
-    <div class="menu-btn" onclick="toggleSidebar()">☰</div>
+    <div class="menu-btn">☰</div>
     <div class="logo">AIRA ELITE</div>
     <div style="width:40px;"></div>
 </header>
 
 <div id="chat-window">
     <div class="aira-msg-group">
-        <div class="aira-msg">Neural channels active. Systems optimal. Ready for command, Muthee. ⚡</div>
+        <div class="aira-msg">Neural channels upgraded to Llama 3.1. Ready for command, Muthee. ⚡</div>
     </div>
 </div>
 
 <div class="bottom-area">
     <div class="input-pill">
-        <label for="fileInput" class="plus-icon">+</label>
-        <input type="file" id="fileInput" onchange="handleFile(this)">
+        <div style="font-size:28px; color:#00d4ff; margin-right:20px; cursor:pointer;">+</div>
         <input type="text" id="userInput" placeholder="Ask AIRA..." oninput="checkInput()" onkeypress="if(event.key==='Enter') send()">
         <div class="action-btns">
-            <div class="waves" id="micWaves" onclick="toggleMic()">
-                <div class="bar"></div><div class="bar"></div><div class="bar"></div>
-            </div>
+            <div class="waves" id="micWaves"><div class="bar"></div><div class="bar"></div><div class="bar"></div></div>
             <div class="send-btn" id="sendBtn" onclick="send()">➤</div>
         </div>
     </div>
@@ -136,10 +102,8 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-    // --- API CONFIG ---
-    // Ninte Groq API Key ivide paste cheyyuka
     const GROQ_API_KEY = "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"; 
-    const SYSTEM_PROMPT = "Your name is AIRA. You are a futuristic AI assistant. Your creator is Muthee. Be cool and helpful.";
+    const SYSTEM_PROMPT = "Your name is AIRA. You are a futuristic AI assistant created by Muthee. Be brief and witty.";
 
     let scene, camera, renderer, mesh;
 
@@ -155,45 +119,28 @@
     }
     function animate() { requestAnimationFrame(animate); mesh.rotation.y += 0.002; renderer.render(scene, camera); }
 
-    function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
-    
     function checkInput() {
         const val = document.getElementById('userInput').value;
         document.getElementById('micWaves').style.display = val.length > 0 ? 'none' : 'flex';
         document.getElementById('sendBtn').style.display = val.length > 0 ? 'block' : 'none';
     }
 
-    function toggleMic() {
-        document.getElementById('micWaves').classList.toggle('active-mic');
-        if(document.getElementById('micWaves').classList.contains('active-mic')) {
-            console.log("Listening...");
-        }
-    }
-
-    function handleFile(input) {
-        if(input.files[0]) alert("File linked: " + input.files[0].name);
-    }
-
     async function send() {
         const input = document.getElementById('userInput');
         const chat = document.getElementById('chat-window');
         const userText = input.value.trim();
-        
         if(!userText) return;
 
-        // User Message UI
         const uBox = document.createElement('div');
         uBox.className = 'user-msg';
         uBox.textContent = userText;
         chat.appendChild(uBox);
-        
         input.value = ""; checkInput();
         chat.scrollTop = chat.scrollHeight;
 
-        // 1. Replay Animation (Thinking Circle)
         const thinkGroup = document.createElement('div');
         thinkGroup.className = 'aira-msg-group';
-        thinkGroup.id = "current-loader";
+        thinkGroup.id = "loader";
         thinkGroup.innerHTML = `<div class="thinking-nexus"><div class="gemini-circle"></div></div>`;
         chat.appendChild(thinkGroup);
         chat.scrollTop = chat.scrollHeight;
@@ -206,7 +153,7 @@
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    model: "llama3-8b-8192",
+                    model: "llama-3.1-8b-instant", // UPDATED MODEL NAME HERE
                     messages: [
                         { role: "system", content: SYSTEM_PROMPT },
                         { role: "user", content: userText }
@@ -215,26 +162,22 @@
             });
 
             const data = await response.json();
-            
             if(data.error) throw new Error(data.error.message);
-
             const aiText = data.choices[0].message.content;
 
-            // 2. Remove Loader & Show AI Response
-            document.getElementById('current-loader').remove();
+            document.getElementById('loader').remove();
+            const airaDiv = document.createElement('div');
+            airaDiv.className = 'aira-msg-group';
+            airaDiv.innerHTML = `<div class="aira-msg"></div>`;
+            chat.appendChild(airaDiv);
             
-            const airaGroup = document.createElement('div');
-            airaGroup.className = 'aira-msg-group';
-            airaGroup.innerHTML = `<div class="aira-msg"></div>`;
-            chat.appendChild(airaGroup);
-            
-            typeWriter(airaGroup.querySelector('.aira-msg'), aiText);
+            typeWriter(airaDiv.querySelector('.aira-msg'), aiText);
 
         } catch (err) {
-            document.getElementById('current-loader').remove();
+            if(document.getElementById('loader')) document.getElementById('loader').remove();
             const errBox = document.createElement('div');
             errBox.className = 'aira-msg-group';
-            errBox.innerHTML = `<div class="aira-msg" style="color:#ff4d4d;">Neural link failed: ${err.message}</div>`;
+            errBox.innerHTML = `<div class="aira-msg" style="color:red;">Error: ${err.message}</div>`;
             chat.appendChild(errBox);
         }
     }
@@ -245,13 +188,12 @@
             if (i < text.length) { 
                 el.textContent += text.charAt(i); 
                 i++; 
-                setTimeout(type, 20); 
+                setTimeout(type, 15); 
                 document.getElementById('chat-window').scrollTop = document.getElementById('chat-window').scrollHeight;
             }
         }
         type();
     }
-
     init3D();
 </script>
 </body>
